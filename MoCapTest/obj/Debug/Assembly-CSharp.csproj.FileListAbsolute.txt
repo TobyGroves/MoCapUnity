@@ -270,3 +270,7 @@ L:\Unity\MoCap\PC\MoCapTest\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.c
 L:\Unity\MoCap\PC\MoCapTest\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 L:\Unity\MoCap\PC\MoCapTest\obj\Debug\Assembly-CSharp.dll
 L:\Unity\MoCap\PC\MoCapTest\obj\Debug\Assembly-CSharp.pdb
+L:\Unity\MoCap\PC\MoCapUnity\MoCapTest\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+L:\Unity\MoCap\PC\MoCapUnity\MoCapTest\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
+L:\Unity\MoCap\PC\MoCapUnity\MoCapTest\obj\Debug\Assembly-CSharp.dll
+L:\Unity\MoCap\PC\MoCapUnity\MoCapTest\obj\Debug\Assembly-CSharp.pdb

@@ -123,7 +123,15 @@ public class MocapTest1 : MonoBehaviour
         yield return null;
 
         ComplementaryGyroFilter(currentGyro, timeSinceLastPoll);
-        //targetObject.transform.eulerAngles = new Vector3(pitch, -yaw, -roll);
+
+        //targetObject.transform.eulerAngles = new Vector3(pitch, 0, 0);
+
+        targetObject.transform.RotateAround(targetObject.transform.position, targetObject.transform.right, xRotNode);
+        targetObject.transform.RotateAround(targetObject.transform.position, targetObject.transform.up, -zRotNode);
+        targetObject.transform.RotateAround(targetObject.transform.position, targetObject.transform.forward, yRotNode);
+
+
+        //targetObject.transform.localEulerAngles += new Vector3(xRotNode, -yRotNode, zRotNode);
 
         // x is right
         // y is up
@@ -133,27 +141,28 @@ public class MocapTest1 : MonoBehaviour
         //Debug.DrawRay(targetObject.transform.position, targetObject.transform.forward * 10f, Color.blue);
 
 
-        Vector3 xRotVector = new Vector3 (targetObject.transform.right.x * xRotNode,
+        /*Vector3 xRotVector = new Vector3 (targetObject.transform.right.x * xRotNode,
             targetObject.transform.right.y * xRotNode, targetObject.transform.right.z * xRotNode);
 
         Vector3 yRotVector = new Vector3(targetObject.transform.up.x * -zRotNode, 
             targetObject.transform.up.y * -zRotNode, targetObject.transform.up.z * -zRotNode);
 
         Vector3 zRotVector = new Vector3(targetObject.transform.forward.x * yRotNode, 
-            targetObject.transform.forward.y * yRotNode, targetObject.transform.forward.z * yRotNode);
+            targetObject.transform.forward.y * yRotNode, targetObject.transform.forward.z * yRotNode);*/
 
-        targetObjectRotation = (xRotVector + yRotVector + zRotVector) ;
+        //targetObjectRotation = (xRotVector + yRotVector + zRotVector);
 
         //targetObject.transform.eulerAngles = targetObject.transform.eulerAngles + targetObjectRotation;
-        Debug.Log(xRotVector); // seems ok 
-        Debug.Log(targetObject.transform.localRotation.eulerAngles.x); // clamps at 270 WHYYYYY ?
+        //Debug.Log(xRotVector); // seems ok 
+        //Debug.Log(targetObject.transform.localRotation.eulerAngles.x); // clamps at 270 WHYYYYY ?
 
         /*targetObject.transform.eulerAngles = 
             new Vector3((targetObject.transform.eulerAngles.x + targetObjectRotation.x)%360, 
             (targetObject.transform.eulerAngles.y + targetObjectRotation.y) % 360, 
             (targetObject.transform.eulerAngles.z + targetObjectRotation.z) % 360);//% 360f;*/
 
-        targetObject.transform.eulerAngles += targetObjectRotation;
+        //targetObject.transform.eulerAngles += targetObjectRotation;
+        //targetObject.transform.Rotate(targetObjectRotation);
         //targetObject.transform.localRotation = Quaternion.Euler((targetObject.transform.localRotation.eulerAngles +targetObjectRotation));
         //+= targetObjectRotation;
 
@@ -193,9 +202,11 @@ public class MocapTest1 : MonoBehaviour
     {
 
         pitch += ((float)_gyroData.x / 131) * _dt;
-        roll -= ((float)_gyroData.y / 131) * _dt;
+        roll += ((float)_gyroData.y / 131) * _dt;
         yaw += ((float)_gyroData.z / 131) * _dt;
-        xRotNode = ((float)_gyroData.x / 131) * _dt; // clamps at 270 ?
+
+
+        xRotNode = ((float)_gyroData.x / 131) * _dt; // clamps at 270 ? 
         yRotNode = ((float)_gyroData.y / 131) * _dt;
         zRotNode = ((float)_gyroData.z / 131) * _dt;
 
