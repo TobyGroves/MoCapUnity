@@ -57,7 +57,6 @@ public class MocapTest1 : MonoBehaviour
     void Start()
     {
         StartCoroutine(calibrate());
-        //StartCoroutine(RequestLoop());
     }
 
     // ping the rest api to get the data minimum 30 times per second but probably more like 100;
@@ -76,7 +75,6 @@ public class MocapTest1 : MonoBehaviour
             }
             yield return null;
         }
-        //Debug.Log("Time Taken for all polls : " + (Time.time - startTime));
     }
 
     IEnumerator GetData()
@@ -94,8 +92,6 @@ public class MocapTest1 : MonoBehaviour
             }
             else
             {
-                //Debug.Log("Received: " + webRequest.downloadHandler.text);
-                //curData = JsonUtility.FromJson<DataStruct>(webRequest.downloadHandler.text);
                 setData(JsonUtility.FromJson<DataStruct>(webRequest.downloadHandler.text));
 
                 dataRecived = true;
@@ -105,7 +101,10 @@ public class MocapTest1 : MonoBehaviour
     void setData(DataStruct _curData)
     {
         currentGyro = _curData.mpu1.gyro;
-        currentAccel = new Vector3((int)(_curData.mpu1.accel.x / 100), (int)(_curData.mpu1.accel.y / 100), (int)(_curData.mpu1.accel.z / 100));
+
+        currentAccel = new Vector3((int)(_curData.mpu1.accel.x / 100), (int)(_curData.mpu1.accel.y / 100),
+            (int)(_curData.mpu1.accel.z / 100));
+
         currentAccel  = currentAccel - approxGrav;
         if (currentGyro.x >= gyroDeadZoneMin.x && currentGyro.x <= gyroDeadZoneMax.x) currentGyro.x = 0;
         if (currentGyro.y >= gyroDeadZoneMin.y && currentGyro.y <= gyroDeadZoneMax.y) currentGyro.y = 0;
@@ -129,24 +128,41 @@ public class MocapTest1 : MonoBehaviour
         // x is right
         // y is up
         // z is forward
+        //Debug.DrawRay(targetObject.transform.position, targetObject.transform.right * 10f, Color.red);
+        //Debug.DrawRay(targetObject.transform.position, targetObject.transform.up * 10f, Color.green);
+        //Debug.DrawRay(targetObject.transform.position, targetObject.transform.forward * 10f, Color.blue);
 
-        Debug.DrawRay(targetObject.transform.position, targetObject.transform.right * 10f, Color.red);
-        Debug.DrawRay(targetObject.transform.position, targetObject.transform.up * 10f, Color.green);
-        Debug.DrawRay(targetObject.transform.position, targetObject.transform.forward * 10f, Color.blue);
 
-        Vector3 xRotVector = new Vector3 (targetObject.transform.right.x * xRotNode, targetObject.transform.right.y * xRotNode, targetObject.transform.right.z * xRotNode);
-        Vector3 yRotVector = new Vector3(targetObject.transform.up.x * -zRotNode, targetObject.transform.up.y * -zRotNode, targetObject.transform.up.z * -zRotNode);
-        Vector3 zRotVector = new Vector3(targetObject.transform.forward.x * yRotNode, targetObject.transform.forward.y * yRotNode, targetObject.transform.forward.z * yRotNode);
+        Vector3 xRotVector = new Vector3 (targetObject.transform.right.x * xRotNode,
+            targetObject.transform.right.y * xRotNode, targetObject.transform.right.z * xRotNode);
 
-        targetObjectRotation = targetObject.transform.eulerAngles + (xRotVector + yRotVector + zRotVector);
+        Vector3 yRotVector = new Vector3(targetObject.transform.up.x * -zRotNode, 
+            targetObject.transform.up.y * -zRotNode, targetObject.transform.up.z * -zRotNode);
 
-        targetObject.transform.eulerAngles = targetObjectRotation;
+        Vector3 zRotVector = new Vector3(targetObject.transform.forward.x * yRotNode, 
+            targetObject.transform.forward.y * yRotNode, targetObject.transform.forward.z * yRotNode);
+
+        targetObjectRotation = (xRotVector + yRotVector + zRotVector) ;
+
+        //targetObject.transform.eulerAngles = targetObject.transform.eulerAngles + targetObjectRotation;
+        Debug.Log(xRotVector); // seems ok 
+        Debug.Log(targetObject.transform.localRotation.eulerAngles.x); // clamps at 270 WHYYYYY ?
+
+        /*targetObject.transform.eulerAngles = 
+            new Vector3((targetObject.transform.eulerAngles.x + targetObjectRotation.x)%360, 
+            (targetObject.transform.eulerAngles.y + targetObjectRotation.y) % 360, 
+            (targetObject.transform.eulerAngles.z + targetObjectRotation.z) % 360);//% 360f;*/
+
+        targetObject.transform.eulerAngles += targetObjectRotation;
+        //targetObject.transform.localRotation = Quaternion.Euler((targetObject.transform.localRotation.eulerAngles +targetObjectRotation));
+        //+= targetObjectRotation;
 
 
 
 
         //targetObject.transform.localEulerAngles = new Vector3(xRotNode,-zRotNode, yRotNode);
-        // current accel divided by 1g raw to convert into g's then times by 9.8067 to get it in meters per second squared
+        // current accel divided by 1g raw to convert into g's then times by 9.8067 to get it in meters per 
+        // second squared
         velocity += ((((currentAccel*100) / 16384) * 9.8067f) * timeSinceLastPoll) / 2;
 
 
@@ -154,6 +170,9 @@ public class MocapTest1 : MonoBehaviour
 
     private void Update()
     {
+        Debug.DrawRay(targetObject.transform.position, targetObject.transform.right * 10f, Color.red);
+        Debug.DrawRay(targetObject.transform.position, targetObject.transform.up * 10f, Color.green);
+        Debug.DrawRay(targetObject.transform.position, targetObject.transform.forward * 10f, Color.blue);
         //targetObject.transform.localPosition += velocity * Time.deltaTime;
         if (Input.GetKeyDown("space"))
         {
@@ -167,6 +186,7 @@ public class MocapTest1 : MonoBehaviour
 
     float GYROSCOPE_SENSITIVITY = 131f;
     float ACCELEROMETER_SENSITIVITY = 16384f; 
+    [SerializeField]
     float pitch, roll, yaw,xRotNode,yRotNode,zRotNode;
     float M_PI = 3.14159265359f;
     void ComplementaryGyroFilter(Vector3 _gyroData, float _dt)
@@ -175,7 +195,7 @@ public class MocapTest1 : MonoBehaviour
         pitch += ((float)_gyroData.x / 131) * _dt;
         roll -= ((float)_gyroData.y / 131) * _dt;
         yaw += ((float)_gyroData.z / 131) * _dt;
-        xRotNode = ((float)_gyroData.x / 131) * _dt;
+        xRotNode = ((float)_gyroData.x / 131) * _dt; // clamps at 270 ?
         yRotNode = ((float)_gyroData.y / 131) * _dt;
         zRotNode = ((float)_gyroData.z / 131) * _dt;
 
@@ -219,7 +239,8 @@ public class MocapTest1 : MonoBehaviour
             }
             yield return null;
         }
-        approxGrav = new Vector3((int)(approxGravtemp.x / 300), (int)(approxGravtemp.y / 300),(int)( approxGravtemp.z / 300));
+        approxGrav = new Vector3((int)(approxGravtemp.x / 300), (int)(approxGravtemp.y / 300),
+            (int)( approxGravtemp.z / 300));
         Debug.Log("approx gravity direction calculated");
 
         StartCoroutine(next);
