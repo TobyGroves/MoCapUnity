@@ -137,7 +137,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &94596618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,16 +153,22 @@ MonoBehaviour:
   running: 1
   pollingInterval: 0
   targetObject: {fileID: 921329707}
-  currentMoveSpeed: {x: 0, y: 0, z: 0}
-  currentRotationSpeed: {x: 0, y: 0, z: 0}
   currentGyro: {x: 0, y: 0, z: 0}
   currentAccel: {x: 0, y: 0, z: 0}
-  m_deadzoneMinXGyro: 0
-  m_deadzoneMinYGyro: 0
-  m_deadzoneMinZGyro: 0
-  m_deadzoneMaxXGyro: 0
-  m_deadzoneMaxYGyro: 0
-  m_deadzoneMaxZGyro: 0
+  accDeadZoneMin: {x: 0, y: 0, z: 0}
+  accDeadZoneMax: {x: 0, y: 0, z: 0}
+  gyroDeadZoneMin: {x: 0, y: 0, z: 0}
+  gyroDeadZoneMax: {x: 0, y: 0, z: 0}
+  approxGrav: {x: 0, y: 0, z: 0}
+  targetObjectRotation: {x: 0, y: 0, z: 0}
+  velocity: {x: 0, y: 0, z: 0}
+  pitch: 0
+  roll: 0
+  yaw: 0
+  xRotNode: 0
+  yRotNode: 0
+  zRotNode: 0
+  countdz: 0
 --- !u!4 &94596619
 Transform:
   m_ObjectHideFlags: 0
@@ -764,6 +770,58 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1322662786}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1544961576
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1544961578}
+  - component: {fileID: 1544961577}
+  m_Layer: 0
+  m_Name: MoCapTestManager (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1544961577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544961576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 835b94db766f135439bd04f2010b08c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  url: http://192.168.0.144:5000/
+  targetObject: {fileID: 921329707}
+  accDeadZoneMin: {x: 0, y: 0, z: 0}
+  accDeadZoneMax: {x: 0, y: 0, z: 0}
+  gyroDeadZoneMin: {x: 0, y: 0, z: 0}
+  gyroDeadZoneMax: {x: 0, y: 0, z: 0}
+  gravCalcNumData: 300
+  deadzoneCalcNumData: 1000
+  approxGravPerSec: {x: 0, y: 0, z: 0}
+--- !u!4 &1544961578
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544961576}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1704441001
 GameObject:
   m_ObjectHideFlags: 0
